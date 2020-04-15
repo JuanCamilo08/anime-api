@@ -1,5 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
+import db from './db';
+
+db();
 
 const app = express();
 
