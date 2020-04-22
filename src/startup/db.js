@@ -3,7 +3,7 @@ import logger from './logging';
 
 export default async function () {
   try {
-    await mongoose.connect('mongodb://localhost:27017/anime-api', {
+    await mongoose.connect('mongodb://db:27017/anime-api', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,

@@ -1,7 +1,7 @@
 {
   "name": "anime-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "an api",
   "main": "index.js",
   "scripts": {
     "build": "babel src/ -d dist",
