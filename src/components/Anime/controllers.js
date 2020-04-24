@@ -1,7 +1,13 @@
 import Model, { animeValidator } from './model';
+import queryValidator from '../../utils/queryValidator';
 
 export const getAnimes = async (req, res) => {
-  const animes = await Model.find();
+  const { error, value } = queryValidator(req.query);
+  if (error) return res.status(400).json(error.details[0].message);
+
+  const animes = await Model.find(value);
+  if (animes.length === 0) return res.status(404).json('Anime not found.');
+
   res.send(animes);
 };
 
