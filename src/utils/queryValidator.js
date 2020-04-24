@@ -5,6 +5,8 @@ export default function (querys) {
     name: Joi.string(),
     description: Joi.string(),
     creationDate: Joi.date(),
+    limit: Joi.number(),
+    page: Joi.number(),
   });
-  return schema.validate(querys, { abortEarly: false, allowUnknown: false });
+  return schema.validate(querys, { allowUnknown: false });
 }

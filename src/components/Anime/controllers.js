@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import Model, { animeValidator } from './model';
 import queryValidator from '../../utils/queryValidator';
 
@@ -5,10 +6,33 @@ export const getAnimes = async (req, res) => {
   const { error, value } = queryValidator(req.query);
   if (error) return res.status(400).json(error.details[0].message);
 
-  const animes = await Model.find(value);
-  if (animes.length === 0) return res.status(404).json('Anime not found.');
+  const startIndex = (value.page - 1) * value.limit;
+  const endIndex = value.page * value.limit;
 
-  res.send(animes);
+  const results = {};
+
+  results.animes = await Model.find(
+    _.pick(value, ['name', 'description', 'creationDate']),
+  )
+    .skip(startIndex)
+    .limit(value.limit);
+  if (results.length === 0) return res.status(404).json('Anime not found.');
+
+  if (startIndex > 0) {
+    results.previous = {
+      limit: value.limit,
+      page: value.page - 1,
+    };
+  }
+
+  if (endIndex < (await Model.estimatedDocumentCount())) {
+    results.next = {
+      limit: value.limit,
+      page: value.page + 1,
+    };
+  }
+
+  res.send(results);
 };
 
 export const getOneAnime = async (req, res) => {
