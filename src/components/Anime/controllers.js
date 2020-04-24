@@ -6,31 +6,31 @@ export const getAnimes = async (req, res) => {
   const { error, value } = queryValidator(req.query);
   if (error) return res.status(400).json(error.details[0].message);
 
-  const startIndex = (value.page - 1) * value.limit;
-  const endIndex = value.page * value.limit;
+  const { page, limit = 50 } = value;
 
+  const startIndex = (page - 1) * limit;
   const results = {};
 
   results.animes = await Model.find(
     _.pick(value, ['name', 'description', 'creationDate']),
   )
     .skip(startIndex)
-    .limit(value.limit);
-  if (results.length === 0) return res.status(404).json('Anime not found.');
+    .limit(limit);
+  if (results.animes.length === 0)
+    return res.status(404).json('Anime not found.');
 
-  if (startIndex > 0) {
-    results.previous = {
-      limit: value.limit,
-      page: value.page - 1,
-    };
-  }
+  results.nAnimes = results.animes.length;
+  results.totalAnimes = await Model.estimatedDocumentCount();
 
-  if (endIndex < (await Model.estimatedDocumentCount())) {
-    results.next = {
-      limit: value.limit,
-      page: value.page + 1,
-    };
-  }
+  results.hasNextPage = (() => {
+    const endIndex = page * limit;
+    if (endIndex < results.totalAnimes) {
+      return true;
+    }
+    return false;
+  })();
+
+  results.page = page;
 
   res.send(results);
 };
