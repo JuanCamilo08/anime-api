@@ -7,7 +7,6 @@ executors:
 
 jobs:
   build:
-    working_directory: -/anime-api
     executor: ubuntu
     steps:
       - checkout
