@@ -1,0 +1,22 @@
+version: '2.1'
+
+executors:
+  ubuntu:
+    machine:
+      image: ubuntu-1604:202004-01
+
+jobs:
+  build:
+    executor: ubuntu
+    steps:
+      - checkout
+      
+      - run: 
+          name: build image
+          command: docker build -t anime-api:1.0 .
+      
+      - run:
+          name: create container and run tests
+          command: docker container run anime-api:1.0 npm test
+
+
