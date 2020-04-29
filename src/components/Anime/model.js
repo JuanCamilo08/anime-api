@@ -39,7 +39,7 @@ export function animeValidator(anime) {
     description: Joi.string().required().min(10).max(1080),
     creationDate: Joi.date(),
     seasons: Joi.object().min(1).required(),
-    genre: Joi.array().items(Joi.string())
+    genre: Joi.array().items(Joi.string()),
   });
 
   return JoiSchema.validate(anime);
